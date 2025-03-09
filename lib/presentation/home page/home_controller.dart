@@ -276,17 +276,14 @@ class HomePageController {
 
   // Plays music from a given position (in seconds)
   Future<void> playMusicFromPosition(double timeStamp) async {
-    getSecondsAndMilliseconds(timeStamp);
+    seconds = timeStamp.floor();
+    milliseconds = ((timeStamp - seconds) * 1000).round();
+
     await audioPlayer.setSource(AssetSource('dharavikabhoot.mp3'));
     await audioPlayer
         .seek(Duration(seconds: seconds, milliseconds: milliseconds));
     await audioPlayer.resume();
     isPlaying = true;
-  }
-
-  void getCurrentPosition() async {
-    var position = await audioPlayer.getCurrentPosition();
-    print('Current position: $position');
   }
 
   // Stops the music playback
@@ -298,12 +295,5 @@ class HomePageController {
   void dispose() {
     scrollController.dispose();
     audioPlayer.dispose();
-  }
-
-  void getSecondsAndMilliseconds(double timeStamp) {
-    seconds = timeStamp.floor();
-    milliseconds = ((timeStamp - seconds) * 1000).round();
-    print(milliseconds);
-    print(seconds);
   }
 }

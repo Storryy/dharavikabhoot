@@ -78,8 +78,8 @@ class HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: group
                           .map((lyric) => GestureDetector(
-                                onTap: () {
-                                  controller.stopMusic();
+                                onTap: () async {
+                                  await controller.stopMusic();
                                   controller.playMusicFromPosition(
                                       lyric["timestamp"]);
                                 },

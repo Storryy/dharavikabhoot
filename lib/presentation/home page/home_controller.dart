@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -8,11 +10,19 @@ class HomePageController {
 
   // Animation constants
   final double initialHeaderHeight = 400;
-  final double finalHeaderHeight = 200;
+  final double finalHeaderHeight = 300;
   final double topPadding = 1;
   int seconds = 0;
   int milliseconds = 0;
 
+  // Audio position tracking
+  Timer? _positionTimer;
+  double currentTimestamp = 0;
+  int currentLyricIndex = -1;
+  final StreamController<double> timestampStream =
+      StreamController<double>.broadcast();
+  final StreamController<int> highlightedLyricStream =
+      StreamController<int>.broadcast();
   final List<Map<String, dynamic>> lyricsData = [
     {"lyrics": "Aree sun be bhidu, ye hai Dharavi ka bhoot", "timestamp": 9},
     {
@@ -21,7 +31,8 @@ class HomePageController {
     },
     {
       "lyrics": "Halka leke baitha, toh life dega jhatka,",
-      "timestamp": 14.661000
+      "timestamp": 14.661000,
+      "type": "clickable",
     },
     {
       "lyrics": "Raste pe gir gaya toh, koi nahi uthane wala patka!",
@@ -30,11 +41,13 @@ class HomePageController {
     {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
     {
       "lyrics": "Maa machine pe silai, baap ka haath me chhalla,",
-      "timestamp": 19.715000
+      "timestamp": 19.715000,
+      "type": "clickable",
     },
     {
       "lyrics": "Bachpan ka sapna, cricket ya chhoti galli ka dhanda?",
-      "timestamp": 22.310000
+      "timestamp": 22.310000,
+      "type": "clickable",
     },
     {"lyrics": "Bhai bole, 'Beta safe खेल',", "timestamp": 24.866000},
     {"lyrics": "Par sapne heavy, toh dil kaise fail?", "timestamp": 26.662000},
@@ -45,7 +58,8 @@ class HomePageController {
     },
     {
       "lyrics": "'Bhaag school ja, nahi toh kal koi naukri na hai!'",
-      "timestamp": 32.3
+      "timestamp": 32.3,
+      "type": "clickable",
     },
     {
       "lyrics": "Bollywood wale bole, 'Hip-hop toh faltu hai,'",
@@ -66,7 +80,8 @@ class HomePageController {
     },
     {
       "lyrics": "Class privilege ke wajah se gatekeepers high,",
-      "timestamp": 44.166000
+      "timestamp": 44.166000,
+      "type": "clickable",
     },
     {
       "lyrics": "Par hum galiyo se aaye, aur beat pe laaye bhai!",
@@ -89,16 +104,12 @@ class HomePageController {
     {
       "lyrics": "'Ghar ke andar chillam chale,'",
       "timestamp": 54.338000,
-    },
-    {
-      "lyrics": "",
-      "timestamp": -1,
-      "type": "spacer",
-      "height": 40,
+      "type": "clickable",
     },
     {
       "lyrics": "'Maa ke aansu kisi ko dikhe naa bhale!'",
-      "timestamp": 56.732000
+      "timestamp": 56.732000,
+      "type": "clickable",
     },
     {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
     {"lyrics": "Galli ka ladka ball fake bohot tight,", "timestamp": 58.917000},
@@ -114,7 +125,8 @@ class HomePageController {
     {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
     {
       "lyrics": "Magar mic uthaye, toh duniya lagi judge karne,",
-      "timestamp": 68.651000
+      "timestamp": 68.651000,
+      "type": "clickable",
     },
     {
       "lyrics": "'Yeh kya be faltu hai, koi job dhang ka कर ले?'",
@@ -145,13 +157,39 @@ class HomePageController {
       "lyrics": "Ek din yahi beat pe stadium bhar denge!",
       "timestamp": 86.13000
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
-    {"lyrics": "'Suno suno, saara system hi mute,'", "timestamp": 88.703000},
-    {"lyrics": "'Andar se chillaye, par koi nahi sunt!'", "timestamp": 91},
-    {"lyrics": "'Paisa bolega, tabhi milega loot,'", "timestamp": 93.517},
-    {"lyrics": "'Duniya chhoti, Dharavi ka bhoot!'", "timestamp": 96.267},
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
-    {"lyrics": "Arrey neta aaye, promise ki barsaat,", "timestamp": 98.165},
+    {
+      "lyrics": "",
+      "timestamp": -1,
+      "type": "spacer",
+      "height": 40,
+    },
+    {
+      "lyrics": "'Suno suno, saara system hi mute,'",
+      "timestamp": 88.703000,
+    },
+    {
+      "lyrics": "'Andar se chillaye, par koi nahi sunt!'",
+      "timestamp": 91,
+    },
+    {
+      "lyrics": "'Paisa bolega, tabhi milega loot,'",
+      "timestamp": 93.517,
+    },
+    {
+      "lyrics": "'Duniya chhoti, Dharavi ka bhoot!'",
+      "timestamp": 96.267,
+    },
+    {
+      "lyrics": "",
+      "timestamp": -1,
+      "type": "spacer",
+      "height": 40,
+    },
+    {
+      "lyrics": "Arrey neta aaye, promise ki barsaat,",
+      "timestamp": 98.165,
+      "type": "clickable",
+    },
     {
       "lyrics": "Phir gayab jaise chhatt se barsi sau chhat!",
       "timestamp": 100.264000
@@ -168,7 +206,8 @@ class HomePageController {
     },
     {
       "lyrics": "'Hip-hop toh sadak pe hai, yeh kaun sunta bhai?'",
-      "timestamp": 109.816000
+      "timestamp": 109.816000,
+      "type": "clickable",
     },
     {
       "lyrics": "Par bhai ka verse jab trending ho jaye,",
@@ -182,6 +221,7 @@ class HomePageController {
     {
       "lyrics": "Ghar chhota, par aukaat badi,",
       "timestamp": 117.665000,
+      "type": "clickable",
     },
     {
       "lyrics": "Ek din TV pe naam likhwayenge, ghadi ghadi!",
@@ -214,8 +254,6 @@ class HomePageController {
       "timestamp": 154.28000
     },
   ];
-
-  // Initialize lyricGroups in constructor to ensure it's ready when view is created
   late final List<List<Map<String, dynamic>>> lyricGroups;
 
   HomePageController() {
@@ -274,26 +312,93 @@ class HomePageController {
     }
   }
 
+  // Start a timer to track audio position
+  void startPositionTracking() {
+    _positionTimer?.cancel();
+    _positionTimer = Timer.periodic(Duration(milliseconds: 100), (timer) async {
+      if (isPlaying) {
+        Duration? position = await audioPlayer.getCurrentPosition();
+        if (position != null) {
+          currentTimestamp = position.inMilliseconds / 1000;
+          timestampStream.add(currentTimestamp);
+
+          // Find which lyric to highlight
+          int newHighlightedIndex = findCurrentLyricIndex(currentTimestamp);
+          if (newHighlightedIndex != currentLyricIndex) {
+            currentLyricIndex = newHighlightedIndex;
+            highlightedLyricStream.add(currentLyricIndex);
+          }
+        }
+      }
+    });
+  }
+
+  // Find which lyric corresponds to the current timestamp
+  int findCurrentLyricIndex(double timestamp) {
+    // Initialize with -1 (no lyrics highlighted)
+    int currentIndex = -1;
+
+    // Find the lyric that corresponds to the current timestamp
+    for (int i = 0; i < lyricsData.length; i++) {
+      var lyric = lyricsData[i];
+      if (lyric["timestamp"] != -1 &&
+          lyric["timestamp"] <= timestamp &&
+          (i == lyricsData.length - 1 ||
+              lyricsData[i + 1]["timestamp"] == -1 ||
+              lyricsData[i + 1]["timestamp"] > timestamp)) {
+        currentIndex = i;
+      }
+    }
+
+    return currentIndex;
+  }
+
   // Plays music from a given position (in seconds)
   Future<void> playMusicFromPosition(double timeStamp) async {
     seconds = timeStamp.floor();
     milliseconds = ((timeStamp - seconds) * 1000).round();
-
     await audioPlayer.setSource(AssetSource('dharavikabhoot.mp3'));
     await audioPlayer
         .seek(Duration(seconds: seconds, milliseconds: milliseconds));
     await audioPlayer.resume();
     isPlaying = true;
+
+    // Start tracking position when playing
+    startPositionTracking();
   }
 
   // Stops the music playback
   Future<void> stopMusic() async {
     await audioPlayer.stop();
     isPlaying = false;
+    _positionTimer?.cancel();
+    currentLyricIndex = -1;
+    highlightedLyricStream.add(currentLyricIndex);
+  }
+
+  // Jumps to a specific lyric and timestamp
+  Future<void> jumpToLyric(int index) async {
+    if (index >= 0 && index < lyricsData.length) {
+      var lyric = lyricsData[index];
+      if (lyric["timestamp"] != -1) {
+        await playMusicFromPosition(lyric["timestamp"]);
+      }
+    }
+  }
+
+  // For manually syncing lyrics if needed
+  void updateHighlightedLyric(int index) {
+    if (currentLyricIndex != index) {
+      currentLyricIndex = index;
+      highlightedLyricStream.add(index);
+    }
   }
 
   void dispose() {
     scrollController.dispose();
     audioPlayer.dispose();
+    _positionTimer?.cancel();
+    timestampStream.close();
+    highlightedLyricStream.close();
   }
 }

@@ -20,5 +20,17 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/dharavikabhoot.mp3
-    - assets/header.png
+    - assets/
+
+
+  fonts:
+    - family: Consolas
+      fonts:
+        - asset: assets/Consolas.ttf
+        - asset: assets/CONSOLAB.TTF
+          weight: 700
+        - asset: assets/consolai.ttf
+          style: italic
+        - asset: assets/CONSOLA.TTF
+        - asset: assets/consolaz.ttf
+          weight: 900

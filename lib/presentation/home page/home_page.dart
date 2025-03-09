@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   HomePageState createState() => HomePageState();
 }
@@ -15,13 +14,17 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     controller = HomePageController();
-
     controller.scrollController.addListener(() {
       double screenHeight = MediaQuery.of(context).size.height;
       // Delegate scroll logic to the controller
       controller.handleScroll(screenHeight);
-
       // Trigger UI update for animations
+      setState(() {});
+    });
+
+    // Add listener for audio position updates
+    controller.highlightedLyricStream.stream.listen((highlightedIndex) {
+      // Force UI update when highlighted lyric changes
       setState(() {});
     });
   }
@@ -39,12 +42,10 @@ class HomePageState extends State<HomePage> {
     double scrollPosition = controller.scrollController.hasClients
         ? controller.scrollController.position.pixels
         : 0;
-
     double headerHeight =
         controller.calculateHeaderHeight(scrollPosition, maxScroll);
     double headerTop =
         controller.calculateHeaderTop(scrollPosition, maxScroll, screenHeight);
-
     // Calculate if header animation is complete
     bool isHeaderAnimationComplete = scrollPosition >= maxScroll;
 
@@ -58,17 +59,14 @@ class HomePageState extends State<HomePage> {
             children: [
               // Initial space for header animation
               SizedBox(height: screenHeight * 0.5),
-
               // Empty container that only becomes visible after header animation completes
               // This ensures we can scroll past the header
               Container(
                 height: isHeaderAnimationComplete ? 0 : screenHeight * 0.5,
               ),
-
               // Verse groups - each taking up a full screen height
               ...controller.lyricGroups.asMap().entries.map((entry) {
                 List<Map<String, dynamic>> group = entry.value;
-
                 return Container(
                   height: screenHeight -
                       headerHeight -
@@ -76,38 +74,86 @@ class HomePageState extends State<HomePage> {
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: group
-                          .map((lyric) => GestureDetector(
-                                onTap: () async {
-                                  await controller.stopMusic();
-                                  controller.playMusicFromPosition(
-                                      lyric["timestamp"]);
-                                },
-                                child: Padding(
+                      children: group.map((lyric) {
+                        // Find the index of this lyric in the original lyricsData
+                        int lyricIndex = controller.lyricsData.indexWhere(
+                            (item) =>
+                                item["lyrics"] == lyric["lyrics"] &&
+                                item["timestamp"] == lyric["timestamp"]);
+
+                        // Check if this lyric is currently highlighted
+                        bool isHighlighted =
+                            controller.currentLyricIndex == lyricIndex;
+
+                        ValueNotifier<bool> isHovered = ValueNotifier(false);
+                        return MouseRegion(
+                          onEnter: (_) => isHovered.value = true,
+                          onExit: (_) => isHovered.value = false,
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () async {
+                              await controller.stopMusic();
+                              controller
+                                  .playMusicFromPosition(lyric["timestamp"]);
+                            },
+                            child: ValueListenableBuilder<bool>(
+                              valueListenable: isHovered,
+                              builder: (context, hovered, child) {
+                                return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Text(
-                                    lyric["lyrics"]!,
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.black,
-                                      fontFamily: 'Consolas',
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
+                                    decoration: BoxDecoration(
+                                      color: isHighlighted
+                                          ? Colors.blue.withOpacity(0.3)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      lyric["lyrics"]!,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontFamily: 'Consolas',
+                                        fontSize: (lyric.containsKey("type") &&
+                                                    lyric["type"] ==
+                                                        "clickable") &&
+                                                (hovered || isHighlighted)
+                                            ? 40
+                                            : 30,
+                                        fontWeight:
+                                            ((lyric.containsKey("type") &&
+                                                        lyric["type"] ==
+                                                            "clickable") ||
+                                                    isHighlighted)
+                                                ? FontWeight.bold
+                                                : FontWeight.normal,
+                                        fontStyle: (lyric.containsKey("type") &&
+                                                lyric["type"] == "clickable")
+                                            ? FontStyle.italic
+                                            : FontStyle.normal,
+                                        color: isHighlighted
+                                            ? Colors.blue.shade700
+                                            : Colors.black,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ))
-                          .toList(),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
                 );
-              }).toList(),
-
+              }),
               // Add extra space at the end to ensure scrolling works for the last verse
               SizedBox(height: 100),
             ],
           ),
-
           // Header animation (stays at top after animation)
           AnimatedPositioned(
             duration: const Duration(milliseconds: 100),
@@ -127,6 +173,29 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ),
+          // Optional: Display current timestamp for debugging
+          if (isHeaderAnimationComplete && controller.isPlaying)
+            Positioned(
+              top: headerHeight + 10,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: StreamBuilder<double>(
+                  stream: controller.timestampStream.stream,
+                  initialData: 0.0,
+                  builder: (context, snapshot) {
+                    return Text(
+                      "Time: ${snapshot.data?.toStringAsFixed(1)}s",
+                      style: const TextStyle(color: Colors.white),
+                    );
+                  },
+                ),
+              ),
+            ),
         ],
       ),
     );

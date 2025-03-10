@@ -120,13 +120,19 @@ class HomePageState extends State<HomePage> {
                                 cursor: SystemMouseCursors.click,
                                 child: GestureDetector(
                                   onTap: () {
-                                    if (isClickable) {
-                                      print(lyric["number"]);
-                                      openSplitScreen(SplitScreen(
-                                          lyricsNumber: lyric["number"]));
-                                    }
+                                    // Ensure music seeks to the correct timestamp first
+                                    print(lyric);
+                                    controller.stopMusic();
                                     controller.playMusicFromPosition(
                                         lyric["timestamp"]);
+
+                                    // Open split screen only after seeking is done
+                                    setState(() {
+                                      if (isClickable) {
+                                        openSplitScreen(SplitScreen(
+                                            lyricsNumber: lyric["number"]));
+                                      }
+                                    });
                                   },
                                   child: ValueListenableBuilder<bool>(
                                     valueListenable: isHovered,

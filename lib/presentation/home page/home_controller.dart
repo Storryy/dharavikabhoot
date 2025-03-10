@@ -9,8 +9,8 @@ class HomePageController {
   bool isPlaying = false;
 
   // Animation constants
-  final double initialHeaderHeight = 400;
-  final double finalHeaderHeight = 300;
+  final double initialHeaderHeight = 300;
+  final double finalHeaderHeight = 200;
   final double topPadding = 1;
   int seconds = 0;
   int milliseconds = 0;
@@ -38,7 +38,7 @@ class HomePageController {
       "lyrics": "Raste pe gir gaya toh, koi nahi uthane wala patka!",
       "timestamp": 16.9
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "Maa machine pe silai, baap ka haath me chhalla,",
       "timestamp": 19.715000,
@@ -51,7 +51,7 @@ class HomePageController {
     },
     {"lyrics": "Bhai bole, 'Beta safe खेल',", "timestamp": 24.866000},
     {"lyrics": "Par sapne heavy, toh dil kaise fail?", "timestamp": 26.662000},
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "Rap likhne baithe, toh gharwale bole, 'Yeh kya hai?'",
       "timestamp": 29.510000
@@ -67,9 +67,9 @@ class HomePageController {
     },
     {
       "lyrics": "Par yahi beat jab trending gayi, tab sab ka jadoo hai!",
-      "timestamp": 36.864000
+      "timestamp": 36.862000
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "Scene बना underground, par budget hai zero,",
       "timestamp": 39.338000
@@ -91,7 +91,7 @@ class HomePageController {
       "lyrics": "",
       "timestamp": -1,
       "type": "spacer",
-      "height": 40,
+      "height": 20,
     },
     {
       "lyrics": "'Raat ka time, galiyon ka crime,'",
@@ -111,7 +111,7 @@ class HomePageController {
       "timestamp": 56.732000,
       "type": "clickable",
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {"lyrics": "Galli ka ladka ball fake bohot tight,", "timestamp": 58.917000},
     {
       "lyrics": "Par school ki kitaab bole, 'Beta future bright!'",
@@ -122,7 +122,7 @@ class HomePageController {
       "lyrics": "Baap bole, 'Zindagi ye hai, koi nahi hero yaar!'",
       "timestamp": 65.901000
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "Magar mic uthaye, toh duniya lagi judge karne,",
       "timestamp": 68.651000,
@@ -140,7 +140,7 @@ class HomePageController {
       "lyrics": "Bhai padh likh ke bhi naukri nahi mile, toh kaun jhant ले?",
       "timestamp": 75.762
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "Hip-hop wale bolte, 'Game toh maara hi hai,'",
       "timestamp": 78.949000
@@ -161,7 +161,7 @@ class HomePageController {
       "lyrics": "",
       "timestamp": -1,
       "type": "spacer",
-      "height": 40,
+      "height": 20,
     },
     {
       "lyrics": "'Suno suno, saara system hi mute,'",
@@ -183,7 +183,7 @@ class HomePageController {
       "lyrics": "",
       "timestamp": -1,
       "type": "spacer",
-      "height": 40,
+      "height": 20,
     },
     {
       "lyrics": "Arrey neta aaye, promise ki barsaat,",
@@ -192,14 +192,14 @@ class HomePageController {
     },
     {
       "lyrics": "Phir gayab jaise chhatt se barsi sau chhat!",
-      "timestamp": 100.264000
+      "timestamp": 100.262000
     },
     {"lyrics": "Gutter ka paani, sadkon pe kheech,", "timestamp": 102.885000},
     {
       "lyrics": "Par Dharavi bole, 'Hum todenge ye deewar ke beech!'",
       "timestamp": 104.864
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "Par jab mic uthaye, toh log judge karte,",
       "timestamp": 107.573000
@@ -217,7 +217,7 @@ class HomePageController {
       "lyrics": "Tabhi wahi log bolte, 'Bhai collab kab aaye?'",
       "timestamp": 114.800000
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "Ghar chhota, par aukaat badi,",
       "timestamp": 117.665000,
@@ -235,7 +235,7 @@ class HomePageController {
       "lyrics": "Kaam se badlenge game, no time for snitch!",
       "timestamp": 124.479000
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "'Yeh Dharavi ka bhoot, sapne hai tezz,'",
       "timestamp": 127.098000
@@ -244,7 +244,7 @@ class HomePageController {
       "lyrics": "'Ek din name hoga, pura shahar dega craze!'",
       "timestamp": 129.832000
     },
-    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 40},
+    {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {
       "lyrics": "'Yeh Dharavi ka bhoot, sapne hai tezz,'",
       "timestamp": 151,

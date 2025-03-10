@@ -9,6 +9,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   late HomePageController controller;
+  // Add ValueNotifier for hint text
+  final ValueNotifier<String> currentHintText = ValueNotifier<String>('');
 
   @override
   void initState() {
@@ -31,6 +33,8 @@ class HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    // Dispose the ValueNotifier
+    currentHintText.dispose();
     controller.dispose();
     super.dispose();
   }
@@ -68,9 +72,7 @@ class HomePageState extends State<HomePage> {
               ...controller.lyricGroups.asMap().entries.map((entry) {
                 List<Map<String, dynamic>> group = entry.value;
                 return Container(
-                  height: screenHeight -
-                      headerHeight -
-                      40, // Full screen minus header and padding
+                  height: 600,
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -85,10 +87,26 @@ class HomePageState extends State<HomePage> {
                         bool isHighlighted =
                             controller.currentLyricIndex == lyricIndex;
 
+                        // Check if lyric is clickable
+                        bool isClickable = lyric.containsKey("type") &&
+                            lyric["type"] == "clickable";
+
                         ValueNotifier<bool> isHovered = ValueNotifier(false);
                         return MouseRegion(
-                          onEnter: (_) => isHovered.value = true,
-                          onExit: (_) => isHovered.value = false,
+                          onEnter: (_) {
+                            isHovered.value = true;
+                            // Show hint text only for clickable lyrics
+                            if (isClickable) {
+                              currentHintText.value = "walk the lanes";
+                            }
+                          },
+                          onExit: (_) {
+                            isHovered.value = false;
+                            // Clear the hint text
+                            if (isClickable) {
+                              currentHintText.value = '';
+                            }
+                          },
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
                             onTap: () async {
@@ -117,21 +135,15 @@ class HomePageState extends State<HomePage> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: 'Consolas',
-                                        fontSize: (lyric.containsKey("type") &&
-                                                    lyric["type"] ==
-                                                        "clickable") &&
+                                        fontSize: isClickable &&
                                                 (hovered || isHighlighted)
                                             ? 40
                                             : 30,
                                         fontWeight:
-                                            ((lyric.containsKey("type") &&
-                                                        lyric["type"] ==
-                                                            "clickable") ||
-                                                    isHighlighted)
+                                            (isClickable || isHighlighted)
                                                 ? FontWeight.bold
                                                 : FontWeight.normal,
-                                        fontStyle: (lyric.containsKey("type") &&
-                                                lyric["type"] == "clickable")
+                                        fontStyle: isClickable
                                             ? FontStyle.italic
                                             : FontStyle.normal,
                                         color: isHighlighted
@@ -173,7 +185,6 @@ class HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          // Optional: Display current timestamp for debugging
           if (isHeaderAnimationComplete && controller.isPlaying)
             Positioned(
               top: headerHeight + 10,
@@ -196,6 +207,33 @@ class HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+          // Hint text bar at the bottom
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: ValueListenableBuilder<String>(
+              valueListenable: currentHintText,
+              builder: (context, hintText, child) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: hintText.isEmpty ? 0 : 40,
+                  width: double.infinity,
+                  color: Colors.black.withOpacity(0.7),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Text(
+                    hintText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

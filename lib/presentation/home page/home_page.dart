@@ -121,7 +121,6 @@ class HomePageState extends State<HomePage> {
                                 child: GestureDetector(
                                   onTap: () {
                                     // Ensure music seeks to the correct timestamp first
-                                    print(lyric);
                                     controller.stopMusic();
                                     controller.playMusicFromPosition(
                                         lyric["timestamp"]);

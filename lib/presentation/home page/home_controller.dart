@@ -33,6 +33,7 @@ class HomePageController {
       "lyrics": "Halka leke baitha, toh life dega jhatka,",
       "timestamp": 14.661000,
       "type": "clickable",
+      "number": 1,
     },
     {
       "lyrics": "Raste pe gir gaya toh, koi nahi uthane wala patka!",
@@ -43,11 +44,13 @@ class HomePageController {
       "lyrics": "Maa machine pe silai, baap ka haath me chhalla,",
       "timestamp": 19.715000,
       "type": "clickable",
+      "number": 2
     },
     {
       "lyrics": "Bachpan ka sapna, cricket ya chhoti galli ka dhanda?",
       "timestamp": 22.310000,
       "type": "clickable",
+      "number": 2
     },
     {"lyrics": "Bhai bole, 'Beta safe खेल',", "timestamp": 24.866000},
     {"lyrics": "Par sapne heavy, toh dil kaise fail?", "timestamp": 26.662000},
@@ -60,6 +63,7 @@ class HomePageController {
       "lyrics": "'Bhaag school ja, nahi toh kal koi naukri na hai!'",
       "timestamp": 32.3,
       "type": "clickable",
+      "number": 3
     },
     {
       "lyrics": "Bollywood wale bole, 'Hip-hop toh faltu hai,'",
@@ -82,6 +86,7 @@ class HomePageController {
       "lyrics": "Class privilege ke wajah se gatekeepers high,",
       "timestamp": 44.166000,
       "type": "clickable",
+      "number": 4,
     },
     {
       "lyrics": "Par hum galiyo se aaye, aur beat pe laaye bhai!",
@@ -105,11 +110,13 @@ class HomePageController {
       "lyrics": "'Ghar ke andar chillam chale,'",
       "timestamp": 54.338000,
       "type": "clickable",
+      "number": 5
     },
     {
       "lyrics": "'Maa ke aansu kisi ko dikhe naa bhale!'",
       "timestamp": 56.732000,
       "type": "clickable",
+      "number": 5
     },
     {"lyrics": "", "timestamp": -1, "type": "spacer", "height": 20},
     {"lyrics": "Galli ka ladka ball fake bohot tight,", "timestamp": 58.917000},
@@ -127,6 +134,7 @@ class HomePageController {
       "lyrics": "Magar mic uthaye, toh duniya lagi judge karne,",
       "timestamp": 68.651000,
       "type": "clickable",
+      "number": 6,
     },
     {
       "lyrics": "'Yeh kya be faltu hai, koi job dhang ka कर ले?'",
@@ -189,6 +197,7 @@ class HomePageController {
       "lyrics": "Arrey neta aaye, promise ki barsaat,",
       "timestamp": 98.165,
       "type": "clickable",
+      "number": 7,
     },
     {
       "lyrics": "Phir gayab jaise chhatt se barsi sau chhat!",
@@ -208,6 +217,7 @@ class HomePageController {
       "lyrics": "'Hip-hop toh sadak pe hai, yeh kaun sunta bhai?'",
       "timestamp": 109.816000,
       "type": "clickable",
+      "number": 8,
     },
     {
       "lyrics": "Par bhai ka verse jab trending ho jaye,",
@@ -222,10 +232,13 @@ class HomePageController {
       "lyrics": "Ghar chhota, par aukaat badi,",
       "timestamp": 117.665000,
       "type": "clickable",
+      "number": 9,
     },
     {
       "lyrics": "Ek din TV pe naam likhwayenge, ghadi ghadi!",
-      "timestamp": 119.697000
+      "timestamp": 119.697000,
+      "type": "clickable",
+      "number": 10,
     },
     {
       "lyrics": "Poverty ka system, par mentality rich,",

@@ -72,7 +72,7 @@ class HomePageState extends State<HomePage> {
               ...controller.lyricGroups.asMap().entries.map((entry) {
                 List<Map<String, dynamic>> group = entry.value;
                 return Container(
-                  height: 600,
+                  height: 500,
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
